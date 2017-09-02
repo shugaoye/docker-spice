@@ -1,20 +1,28 @@
 #
-# Minimum Docker image to build Android AOSP
+# Minimum Docker image to build SPICE
 #
-FROM shugaoye/docker-aosp:ubuntu14.04-JDK7
+FROM fedora:26
 
 MAINTAINER Roger Ye <shugaoye@yahoo.com>
 
+RUN dnf -y update && \
+	dnf -y install 'dnf-command(builddep)'
+
+RUN	dnf -y builddep spice-gtk
+
+RUN dnf -y install openssh-server passwd sudo \ 
+    	wget vim git redhat-rpm-config gstreamer1-plugins-good gstreamer-plugins-bad-free \
+    	orc-devel pyparsing gtk-vnc-devel
+
+# RUN export LC_ALL=C
+# RUN pip install pyomo -U
+RUN dnf clean all
+
+# Configure environment, such as SSH etc.
+RUN echo 'root:root' | chpasswd
+
 # install and configure SSH server
-RUN apt-get update
-RUN apt-get install -y openssh-server net-tools gettext vim-common vim-tiny python-pip libxml2-dev \
-	libtext-csv-perl libglib2.0-dev gtk-doc-tools libpixman-1-dev libgtk-3-dev libjpeg-dev valac libssl-dev
-RUN mkdir /var/run/sshd
-RUN export LC_ALL=C
-
-RUN pip install pyomo -U
-RUN echo 'root:root' |chpasswd
-
+RUN /usr/bin/ssh-keygen -A
 RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 

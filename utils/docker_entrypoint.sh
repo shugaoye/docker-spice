@@ -46,5 +46,5 @@ fi
 
 # Execute command as `aosp` user
 export HOME=/home/aosp
-echo "args=$args"
+echo 'aosp:aosp' | chpasswd
 exec sudo -E -u aosp $args --init-file /root/bash.bashrc

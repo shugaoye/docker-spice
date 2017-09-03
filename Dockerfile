@@ -12,9 +12,9 @@ RUN	dnf -y builddep spice-gtk
 
 RUN dnf -y install openssh-server passwd sudo \ 
     	wget vim git redhat-rpm-config gstreamer1-plugins-good gstreamer-plugins-bad-free \
-    	orc-devel pyparsing gtk-vnc-devel
+    	orc-devel pyparsing gtk-vnc-devel gdb ddd
 
-# RUN export LC_ALL=C
+RUN export LC_ALL=C
 # RUN pip install pyomo -U
 RUN dnf clean all
 

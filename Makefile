@@ -26,7 +26,7 @@
 # Both can be defined in your environment, otherwise the below default values
 # will be used.
 
-TAG_NAME = fedora26_base
+TAG_NAME = fedora26_qemu
 DOCKER = docker
 IMAGE = shugaoye/docker-spice:$(TAG_NAME)
 VOL1 ?= $(HOME)/vol1

@@ -1,4 +1,4 @@
-# Copyright (C) 2017 SPICE build environment using docker
+# Copyright (C) 2017 the base image for QEMU and SPICE build environment using docker
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,22 +23,20 @@
 #
 # Minimum Docker image to build SPICE
 #
-FROM fedora:26
+FROM centos:7
 
 MAINTAINER Roger Ye <shugaoye@yahoo.com>
 
-RUN dnf -y update && \
-	dnf -y install 'dnf-command(builddep)'
+RUN yum -y install yum-utils
+RUN	yum-builddep -y qemu-guest-agent qemu-img qemu-kvm qemu-kvm-common qemu-kvm-tools spice-gtk
 
-RUN	dnf -y builddep spice-gtk
-
-RUN dnf -y install openssh-server passwd sudo \ 
+RUN yum -y install openssh-server passwd sudo \ 
     	wget vim git redhat-rpm-config gstreamer1-plugins-good gstreamer-plugins-bad-free \
     	orc-devel pyparsing gtk-vnc-devel gdb ddd
 
 RUN export LC_ALL=C
 # RUN pip install pyomo -U
-RUN dnf clean all
+RUN yum clean all
 
 # Configure environment, such as SSH etc.
 RUN echo 'root:root' | chpasswd

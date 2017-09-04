@@ -25,12 +25,24 @@ FROM shugaoye/docker-spice:fedora26_base
 
 MAINTAINER Roger Ye <shugaoye@yahoo.com>
 
+ENV PACKAGES \
+    ccache git tar PyYAML sparse flex bison python2 bzip2 hostname \
+    glib2-devel pixman-devel zlib-devel SDL-devel libfdt-devel \
+    gcc gcc-c++ clang make perl which bc findutils libaio-devel \
+    mingw32-pixman mingw32-glib2 mingw32-gmp mingw32-SDL mingw32-pkg-config \
+    mingw32-gtk2 mingw32-gtk3 mingw32-gnutls mingw32-nettle mingw32-libtasn1 \
+    mingw32-libjpeg-turbo mingw32-libpng mingw32-curl mingw32-libssh2 \
+    mingw32-bzip2 \
+    mingw64-pixman mingw64-glib2 mingw64-gmp mingw64-SDL mingw64-pkg-config \
+    mingw64-gtk2 mingw64-gtk3 mingw64-gnutls mingw64-nettle mingw64-libtasn1 \
+    mingw64-libjpeg-turbo mingw64-libpng mingw64-curl mingw64-libssh2 \
+    mingw64-bzip2
+
 RUN dnf -y update && \
-		dnf -y builddep qemu
+		dnf -y builddep virglrenderer
 
-# RUN dnf -y install openssh-server passwd sudo \ 
-#    	wget vim git redhat-rpm-config gstreamer1-plugins-good gstreamer-plugins-bad-free \
-#    	orc-devel pyparsing gtk-vnc-devel gdb ddd
-
+RUN dnf -y install $PACKAGES
+RUN rpm -q $PACKAGES | sort > /packages.txt
+ENV FEATURES mingw clang pyyaml
 
 ENTRYPOINT ["/root/docker_entrypoint.sh"]

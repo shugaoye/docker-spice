@@ -7,13 +7,16 @@ MAINTAINER Roger Ye <shugaoye@yahoo.com>
 
 # install and configure SSH server
 RUN apt-get update
+RUN apt-get build-dep -y qemu spice-gtk
 RUN apt-get install -y openssh-server net-tools gettext vim-common vim-tiny python-pip libxml2-dev \
-	libtext-csv-perl libglib2.0-dev gtk-doc-tools libpixman-1-dev libgtk-3-dev libjpeg-dev valac libssl-dev
+	libtext-csv-perl gtk-doc-tools libpixman-1-dev libjpeg-dev valac libssl-dev \
+	libgbm-dev libsdl2-dev libgtk-3-dev libgles2-mesa-dev libepoxy-dev python-mako libglib2.0-dev
+
 RUN mkdir /var/run/sshd
 RUN export LC_ALL=C
 
 RUN pip install pyomo -U
-RUN echo 'root:root' |chpasswd
+RUN echo 'root:root' | chpasswd
 
 RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config

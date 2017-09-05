@@ -1,4 +1,4 @@
-# Copyright (C) 2017 SPICE build environment using docker
+# Copyright (C) 2017 AOSP/QEMU/SPICE build environment using docker
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
 # Both can be defined in your environment, otherwise the below default values
 # will be used.
 
-TAG_NAME = ubuntu14.04_qemu
+TAG_NAME = ubuntu14.04_qemu-m
 DOCKER = docker
 IMAGE = shugaoye/docker-spice:$(TAG_NAME)
 VOL1 ?= $(HOME)/vol1

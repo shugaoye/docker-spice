@@ -1,11 +1,31 @@
+# Copyright (C) 2017 AOSP/QEMU/SPICE build environment in docker
 #
-# Minimum Docker image to build Android AOSP
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#******************************************************************************
+#
+# Dockerfile - build environment for AOSP/QEMU/SPICE
+#              This docker image can be used to build Android 6, QEMU and SPICE
+#
+# Copyright (c) 2017 Roger Ye.  All rights reserved.
+#
+#******************************************************************************
+#
+
 FROM shugaoye/docker-aosp:ubuntu14.04-JDK7
 
 MAINTAINER Roger Ye <shugaoye@yahoo.com>
 
-# install and configure SSH server
 RUN apt-get update
 RUN apt-get build-dep -y qemu spice-gtk
 RUN apt-get install -y openssh-server net-tools gettext vim-common vim-tiny python-pip libxml2-dev \

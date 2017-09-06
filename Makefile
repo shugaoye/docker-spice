@@ -38,8 +38,11 @@ all: Dockerfile
 	$(DOCKER) build -t $(IMAGE) .
 
 run:
-	$(DOCKER) run --privileged --name "$(TAG_NAME)-v1" -v /tmp/.X11-unix:/tmp/.X11-unix:ro -v "$(VOL1):/home/aosp" \
+	$(DOCKER) run --privileged --name "$(TAG_NAME)-v2" -v /tmp/.X11-unix:/tmp/.X11-unix:ro -v "$(VOL1):/home/aosp" \
 	-v "$(VOL2):/tmp/ccache" -it -e DISPLAY=$(DISPLAY) -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
 	$(IMAGE) /bin/bash
 
 .PHONY: all
+
+spice-protocol:
+	./build_script.sh spice-protocol

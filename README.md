@@ -1,12 +1,12 @@
-Spice Docker Build Environment
+AOSP/QEMU/SPICE Build Environment in Docker
 ====================================================
 
-Spice build environment in Ubuntu 14.04.
+This build environment is based on Ubuntu 14.04.
 
 How to build it
 ---------------
 
-There are two targets (aosp and test) in the Makefile. To build it, just checkout the repository
+There are multiple targets in the Makefile. To build it, just checkout the repository
 and run the below command:
 $ make
 

@@ -30,7 +30,8 @@ RUN apt-get update
 RUN apt-get build-dep -y qemu spice-gtk
 RUN apt-get install -y openssh-server net-tools gettext vim-common vim-tiny python-pip libxml2-dev \
 	libtext-csv-perl gtk-doc-tools libpixman-1-dev libjpeg-dev valac libssl-dev \
-	libgbm-dev libsdl2-dev libgtk-3-dev libgles2-mesa-dev libepoxy-dev python-mako libglib2.0-dev
+	libgbm-dev libsdl2-dev libgtk-3-dev libgles2-mesa-dev libepoxy-dev python-mako libglib2.0-dev \
+	xterm
 
 RUN mkdir /var/run/sshd
 RUN export LC_ALL=C

@@ -1,4 +1,4 @@
-# Copyright (C) 2017 SPICE build environment using docker
+# Copyright (C) 2017 SPICE and QEMU build environment using docker
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
 # Both can be defined in your environment, otherwise the below default values
 # will be used.
 
-TAG_NAME = fedora26_qemu
+TAG_NAME = fedora26_qemu-m
 DOCKER = docker
 IMAGE = shugaoye/docker-spice:$(TAG_NAME)
 VOL1 ?= $(HOME)/vol1
@@ -43,3 +43,18 @@ run:
 	$(IMAGE) /bin/bash
 
 .PHONY: all
+
+spice-protocol:
+	$(DOCKER) run --rm --name "$(TAG_NAME)_spice-protocol" -v "$(VOL1):/home/aosp" \
+	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
+	shugaoye/docker-spice:fedora26_qemu cd qemu_android/src/docker-spice ; ./build_script.sh spice-protocol
+
+spice:
+	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
+	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
+	shugaoye/docker-spice:fedora26_qemu cd qemu_android/src/docker-spice ; ./build_script.sh spice
+
+spice-gtk:
+	$(DOCKER) run --rm --name "$(TAG_NAME)_spice-gtk" -v "$(VOL1):/home/aosp" \
+	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
+	shugaoye/docker-spice:fedora26_qemu cd qemu_android/src/docker-spice ; ./build_script.sh spice-gtk

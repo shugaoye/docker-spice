@@ -36,7 +36,7 @@ ENV PACKAGES \
     mingw64-pixman mingw64-glib2 mingw64-gmp mingw64-SDL mingw64-pkg-config \
     mingw64-gtk2 mingw64-gtk3 mingw64-gnutls mingw64-nettle mingw64-libtasn1 \
     mingw64-libjpeg-turbo mingw64-libpng mingw64-curl mingw64-libssh2 \
-    mingw64-bzip2
+    mingw64-bzip2 telnet
 
 RUN dnf -y update && \
 		dnf -y builddep virglrenderer

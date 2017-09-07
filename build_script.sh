@@ -1,8 +1,8 @@
 #!/bin/sh
 
-cd ../..
-SPICE_ROOT=`pwd`
-# [ -z $1 ] && SPICE_ROOT=`pwd` || SPICE_ROOT=$1
+#cd ../..
+#SPICE_ROOT=`pwd`
+[ -z $2 ] && cd ../..;SPICE_ROOT=`pwd` || SPICE_ROOT=$2
 
 SRC_ROOT=$SPICE_ROOT/src
 INST_ROOT=$SPICE_ROOT/rel

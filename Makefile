@@ -44,17 +44,53 @@ run:
 
 .PHONY: all
 
+# The following build targets can only run inside containers.
 spice-protocol:
-	$(DOCKER) run --rm --name "$(TAG_NAME)_spice-protocol" -v "$(VOL1):/home/aosp" \
-	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	shugaoye/docker-spice:fedora26_qemu cd qemu_android/src/docker-spice ; ./build_script.sh spice-protocol
+	./build_script.sh spice-protocol
 
 spice:
-	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
-	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	shugaoye/docker-spice:fedora26_qemu cd qemu_android/src/docker-spice ; ./build_script.sh spice
+	./build_script.sh spice
 
 spice-gtk:
+	./build_script.sh spice-gtk
+
+virt-viewer:
+	./build_script.sh virt-viewer
+
+virglrenderer:
+	./build_script.sh virglrenderer
+
+qemu:
+	./build_script.sh qemu
+
+# The following build targets can run from the host.
+docker-spice-protocol:
+	$(DOCKER) run --rm --name "$(TAG_NAME)_spice-protocol" -v "$(VOL1):/home/aosp" \
+	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
+	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh spice-protocol
+
+docker-spice:
+	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
+	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
+	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh spice
+
+docker-spice-gtk:
 	$(DOCKER) run --rm --name "$(TAG_NAME)_spice-gtk" -v "$(VOL1):/home/aosp" \
 	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	shugaoye/docker-spice:fedora26_qemu cd qemu_android/src/docker-spice ; ./build_script.sh spice-gtk
+	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh spice-gtk
+
+docker-virt-viewer:
+	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
+	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
+	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh virt-viewer
+
+docker-virglrenderer:
+	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
+	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
+	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh virglrenderer
+
+docker-qemu:
+	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
+	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
+	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh qemu
+

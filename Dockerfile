@@ -45,4 +45,9 @@ RUN dnf -y install $PACKAGES
 RUN rpm -q $PACKAGES | sort > /packages.txt
 ENV FEATURES mingw clang pyyaml
 
+ADD https://storage-googleapis.proxy.ustclug.org/git-repo-downloads/repo /usr/local/bin/
+RUN chmod 755 /usr/local/bin/*
+
+RUN echo "172.17.0.1	mygit" > /etc/hosts
+
 ENTRYPOINT ["/root/docker_entrypoint.sh"]

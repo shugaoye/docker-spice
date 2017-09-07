@@ -1,13 +1,16 @@
 #!/bin/sh
 
-#cd ../..
-#SPICE_ROOT=`pwd`
-[ -z $2 ] && cd ../..;SPICE_ROOT=`pwd` || SPICE_ROOT=$2
+if [ -z $2 ]; then 
+	cd ../..
+	SPICE_ROOT=`pwd`
+else 
+	SPICE_ROOT=$2 
+fi
 
-SRC_ROOT=$SPICE_ROOT/src
-INST_ROOT=$SPICE_ROOT/rel
+SRC_ROOT=${SPICE_ROOT}/src
+INST_ROOT=${SPICE_ROOT}/rel
 
-echo "P= $0 $1 $2 $3 $4"
+echo "P= $0 $1 $2 $3 $4, SRC_ROOT=${SRC_ROOT}"
 [ -d ${SRC_ROOT} ]  && echo "SRC_ROOT=${SRC_ROOT}" || exit 1
 [ -d ${INST_ROOT} ] && echo "INST_ROOT=${INST_ROOT}" || exit 1
 
@@ -33,6 +36,7 @@ case $1 in
         ;;
         spice)
         	[ -d ${SRC_ROOT}/$1 ] && cd ${SRC_ROOT}/$1 || exit 1
+        	git submodule sync
             ./autogen.sh --prefix=${INST_ROOT}
             make install
         ;;
@@ -43,6 +47,7 @@ case $1 in
         ;;
         spice-gtk)
             [ -d ${SRC_ROOT}/$1 ] && cd ${SRC_ROOT}/$1 || exit 1
+            git submodule sync
             ./autogen.sh --prefix=${INST_ROOT}
             make install
         ;;

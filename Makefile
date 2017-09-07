@@ -33,6 +33,7 @@ VOL1 ?= $(HOME)/vol1
 VOL2 ?= $(HOME)/.ccache
 USER_ID := $(shell id -u)
 GROUP_ID := $(shell id -g)
+BUILD_ROOT ?= /home/aosp/qemu_android
 
 all: Dockerfile
 	$(DOCKER) build -t $(IMAGE) .
@@ -67,30 +68,29 @@ qemu:
 docker-spice-protocol:
 	$(DOCKER) run --rm --name "$(TAG_NAME)_spice-protocol" -v "$(VOL1):/home/aosp" \
 	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh spice-protocol
+	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh spice-protocol $(BUILD_ROOT)
 
 docker-spice:
 	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
 	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh spice
+	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh spice $(BUILD_ROOT)
 
 docker-spice-gtk:
 	$(DOCKER) run --rm --name "$(TAG_NAME)_spice-gtk" -v "$(VOL1):/home/aosp" \
 	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh spice-gtk
+	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh spice-gtk $(BUILD_ROOT)
 
 docker-virt-viewer:
 	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
 	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh virt-viewer
+	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh virt-viewer $(BUILD_ROOT)
 
 docker-virglrenderer:
 	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
 	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh virglrenderer
+	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh virglrenderer $(BUILD_ROOT)
 
 docker-qemu:
 	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
 	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) cd qemu_android/src/docker-spice ; ./build_script.sh qemu
-
+	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh qemu $(BUILD_ROOT)

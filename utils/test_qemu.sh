@@ -41,7 +41,8 @@ IMG_TYPE=.qcow2
 
 # Refer to Android emulator (ranchu) for the parameters
 #	-drive if=none,overlap-check=none,cache=unsafe,index=4,id=sdcard,file=${AOSP_OUT}/sdcard.img${IMG_TYPE},l2-cache-size=1048576 
-#	-device virtio-blk-pci,drive=sdcard,iothread=disk-iothread,modern-pio-notify 
+#	-device virtio-blk-pci,drive=sdcard,iothread=disk-iothread,modern-pio-notify
+#  -display gtk,gl=on -device virtio-gpu-pci,virgl
 x86qemu () {
 	echo "Running default ...p0=$0 p1=$1 p2=$2 p3=$3, PATH=$PATH"
 	
@@ -63,8 +64,8 @@ x86qemu () {
 		-drive if=none,overlap-check=none,cache=unsafe,index=2,id=userdata,file=${AOSP_OUT}/userdata.img${IMG_TYPE},l2-cache-size=1048576 \
 		-device virtio-blk-pci,drive=userdata,modern-pio-notify \
 		-append 'ip=dhcp console=ttyS0 rw androidboot.selinux=permissive androidboot.hardware=x86_64qemu ROOT=/dev/vda RAMDISK=vdd DATA=vdc' \
-		-drive index=4,if=virtio,id=ramdisk,file=${AOSP_OUT}/ramdisk.img,format=raw,readonly 
-		-device virtio-gpu-pci,virgl -display gtk,gl=on
+		-drive index=4,if=virtio,id=ramdisk,file=${AOSP_OUT}/ramdisk.img,format=raw,readonly \
+		-vga virtio -device virtio-gpu-pci,virgl
 }
 
 x86qemu_pxe () {
@@ -87,7 +88,7 @@ x86qemu_pxe () {
 		-drive if=none,overlap-check=none,cache=unsafe,index=2,id=userdata,file=${AOSP_OUT}/userdata.img${IMG_TYPE},l2-cache-size=1048576 \
 		-device virtio-blk-pci,drive=userdata,modern-pio-notify \
 		-drive index=4,if=virtio,id=ramdisk,file=${AOSP_OUT}/ramdisk.img,format=raw,readonly \
-		-vga std \
+		-vga virtio \
 		-device virtio-gpu-pci,virgl -spice port=5900,disable-ticketing
 	
 }

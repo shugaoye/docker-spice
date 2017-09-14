@@ -60,7 +60,7 @@ case $1 in
             [ -d ${SRC_ROOT}/$1 ] && cd ${SRC_ROOT}/$1 || exit 1
             [ -d build ] && echo "Buiding QEMU in build folder." || mkdir build
             cd build
-            ../configure --target-list=aarch64-softmmu,x86_64-softmmu --enable-gtk --with-gtkabi=3.0 \
+            ../configure --target-list=aarch64-softmmu,x86_64-softmmu --enable-sdl --with-sdlabi=2.0 --enable-gtk --with-gtkabi=3.0 \
             --enable-kvm --enable-spice --enable-usb-redir --enable-libusb --prefix=${INST_ROOT}
             make install
         ;;

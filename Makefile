@@ -31,6 +31,7 @@ DOCKER = docker
 IMAGE = shugaoye/docker-spice:$(TAG_NAME)
 VOL1 ?= $(HOME)/vol1
 VOL2 ?= $(HOME)/.ccache
+VERSION ?= v2
 USER_ID := $(shell id -u)
 GROUP_ID := $(shell id -g)
 BUILD_ROOT ?= /home/aosp/qemu_android
@@ -39,9 +40,20 @@ all: Dockerfile
 	$(DOCKER) build -t $(IMAGE) .
 
 run:
-	$(DOCKER) run --privileged --name "$(TAG_NAME)-v1" -v /tmp/.X11-unix:/tmp/.X11-unix:ro -v "$(VOL1):/home/aosp" \
+	$(DOCKER) run --privileged --name "$(TAG_NAME)-$(VERSION)" -v /tmp/.X11-unix:/tmp/.X11-unix:ro -v "$(VOL1):/home/aosp" \
 	-v "$(VOL2):/tmp/ccache" -it -e DISPLAY=$(DISPLAY) -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
 	$(IMAGE) /bin/bash
+
+tag:
+	echo "Tagging $(TAG_NAME)-$(VERSION) ..."
+	git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../spice-protocol; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../spice; echo $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../spice-gtk; echo $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../virt-viewer; echo $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../virglrenderer; echo $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../celt; echo $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../qemu; echo $(TAG_NAME)-$(VERSION); git push github $(TAG_NAME)-$(VERSION)
 
 .PHONY: all
 

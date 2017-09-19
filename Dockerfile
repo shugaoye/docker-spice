@@ -27,11 +27,23 @@ FROM shugaoye/docker-aosp:ubuntu16.04-JDK8
 MAINTAINER Roger Ye <shugaoye@yahoo.com>
 
 RUN apt-get update
-RUN apt-get build-dep -y qemu spice-gtk
-RUN apt-get install -y openssh-server net-tools gettext vim-common vim-tiny python-pip libxml2-dev \
-	libtext-csv-perl gtk-doc-tools libpixman-1-dev libjpeg-dev valac libssl-dev \
-	libgbm-dev libsdl2-dev libgtk-3-dev libgles2-mesa-dev libepoxy-dev python-mako libglib2.0-dev \
-	xterm libogg-dev libsdl2-dev
+
+ENV PACKAGES flex bison \
+    libusb-1.0-0-dev libiscsi-dev librados-dev libncurses5-dev \
+    libseccomp-dev libgnutls-dev libssh2-1-dev \
+    libspice-protocol-dev libnss3-dev libfdt-dev \
+    libgtk-3-dev libvte-2.91-dev libsdl1.2-dev libpng12-dev libpixman-1-dev \
+    git make ccache python-yaml gcc clang sparse \
+    openssh-server net-tools gettext vim-common vim-tiny python-pip libxml2-dev \
+    libtext-csv-perl gtk-doc-tools libjpeg-dev valac libssl-dev \
+    libgbm-dev libsdl2-dev libgles2-mesa-dev libepoxy-dev python-mako libglib2.0-dev \
+    xterm libogg-dev
+RUN apt-get -y install $PACKAGES
+
+ENV FEATURES clang pyyaml
+
+RUN apt-get build-dep -y spice-gtk
+RUN apt-get -y purge libspice-protocol-dev
 
 RUN mkdir /var/run/sshd
 RUN export LC_ALL=C

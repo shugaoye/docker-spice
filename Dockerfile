@@ -15,14 +15,14 @@
 #******************************************************************************
 #
 # Dockerfile - build environment for AOSP/QEMU/SPICE
-#              This docker image can be used to build Android 6, QEMU and SPICE
+#              This docker image can be used to build Android 7, QEMU and SPICE
 #
 # Copyright (c) 2017 Roger Ye.  All rights reserved.
 #
 #******************************************************************************
 #
 
-FROM shugaoye/docker-aosp:ubuntu14.04-JDK7
+FROM shugaoye/docker-aosp:ubuntu16.04-JDK8
 
 MAINTAINER Roger Ye <shugaoye@yahoo.com>
 
@@ -31,7 +31,7 @@ RUN apt-get build-dep -y qemu spice-gtk
 RUN apt-get install -y openssh-server net-tools gettext vim-common vim-tiny python-pip libxml2-dev \
 	libtext-csv-perl gtk-doc-tools libpixman-1-dev libjpeg-dev valac libssl-dev \
 	libgbm-dev libsdl2-dev libgtk-3-dev libgles2-mesa-dev libepoxy-dev python-mako libglib2.0-dev \
-	xterm
+	xterm libogg-dev libsdl2-dev
 
 RUN mkdir /var/run/sshd
 RUN export LC_ALL=C

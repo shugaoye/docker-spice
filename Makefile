@@ -48,12 +48,12 @@ tag:
 	echo "Tagging $(TAG_NAME)-$(VERSION) ..."
 	git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
 	cd ../spice-protocol; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../spice; echo $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../spice-gtk; echo $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../virt-viewer; echo $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../virglrenderer; echo $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../celt; echo $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../qemu; echo $(TAG_NAME)-$(VERSION); git push github $(TAG_NAME)-$(VERSION)
+	cd ../spice; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../spice-gtk; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../virt-viewer; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../virglrenderer; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../celt; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
+	cd ../qemu; git tag $(TAG_NAME)-$(VERSION); git push github $(TAG_NAME)-$(VERSION)
 
 .PHONY: all
 

@@ -115,7 +115,7 @@ fi
 
 export PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@qemu_n3:\w\$ '
 alias xterm1='xterm -fn 9x15 -bg lightgray -fg black'
-alias xterm2='xterm -rv'
+alias xterm2='xterm -fn 9x15 -rv'
 alias xterm3='xterm -fn 9x15 -bg white -fg black'
 alias xterm4='xterm -fn 9x15 -bg black -fg white'
 alias xterm5='xterm -fn 9x15 -fg "dark slate gray" -bg "antique white"'

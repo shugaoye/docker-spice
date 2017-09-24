@@ -37,7 +37,7 @@ ENV PACKAGES flex bison \
     openssh-server net-tools gettext vim-common vim-tiny python-pip libxml2-dev \
     libtext-csv-perl gtk-doc-tools libjpeg-dev valac libssl-dev \
     libgbm-dev libsdl2-dev libgles2-mesa-dev libepoxy-dev python-mako libglib2.0-dev \
-    xterm libogg-dev telnet mc
+    xterm libogg-dev telnet mc genisoimage
 RUN apt-get -y install $PACKAGES
 
 ENV FEATURES clang pyyaml

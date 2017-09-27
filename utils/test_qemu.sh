@@ -33,9 +33,14 @@ INST_ROOT=$SPICE_ROOT/rel
 export PKG_CONFIG_PATH=$INST_ROOT/lib/pkgconfig:$INST_ROOT/share/pkgconfig
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$INST_ROOT/lib
 export PATH=$PATH:$INST_ROOT/bin
-echo "PATH=$PATH"
 
-AOSP_OUT=/home/aosp/n/out/target/product/x86qemu
+if [ -z $AOSP_OUT ]; then
+	AOSP_OUT=/home/aosp/m/out/target/product/x86_64qemu
+	echo "Default value is AOSP_OUT=$AOSP_OUT"
+else
+	echo "Using AOSP_OUT=$AOSP_OUT"
+fi
+
 IMG_TYPE=.qcow2
 
 
@@ -63,7 +68,7 @@ x86qemu () {
 		-device virtio-blk-pci,drive=cache,modern-pio-notify \
 		-drive if=none,overlap-check=none,cache=unsafe,index=2,id=userdata,file=${AOSP_OUT}/userdata.img${IMG_TYPE},l2-cache-size=1048576 \
 		-device virtio-blk-pci,drive=userdata,modern-pio-notify \
-		-append 'ip=dhcp console=ttyS0 rw androidboot.selinux=permissive androidboot.hardware=x86_64qemu ROOT=/dev/vda RAMDISK=vdd DATA=vdc' \
+		-append 'ip=dhcp console=ttyS0 rw androidboot.selinux=permissive androidboot.hardware=x86_64qemu DEBUG=2 ROOT=/dev/vda RAMDISK=vdd DATA=vdc' \
 		-drive index=4,if=virtio,id=ramdisk,file=${AOSP_OUT}/ramdisk.img,format=raw,readonly \
 		-vga virtio -device virtio-gpu-pci,virgl -display sdl,gl=on
 }

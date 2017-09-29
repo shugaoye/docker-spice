@@ -70,7 +70,9 @@ x86qemu () {
 		-device virtio-blk-pci,drive=userdata,modern-pio-notify \
 		-append 'ip=dhcp console=ttyS0 rw androidboot.selinux=permissive androidboot.hardware=x86_64qemu DEBUG=2 ROOT=/dev/vda RAMDISK=vdd DATA=vdc' \
 		-drive index=4,if=virtio,id=ramdisk,file=${AOSP_OUT}/ramdisk.img,format=raw,readonly \
-		-vga virtio -device virtio-gpu-pci,virgl -display sdl,gl=on
+		-vga virtio -device virtio-gpu-pci,virgl -display sdl,gl=on \
+		-fsdev local,id=log1,path=/home/aosp/log/,security_model=mapped \
+		-device virtio-9p-pci,fsdev=log1,mount_tag=v_log
 }
 
 x86qemu_pxe () {

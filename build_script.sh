@@ -67,7 +67,7 @@ case $1 in
             [ -d build ] && echo "Buiding QEMU in build folder." || mkdir build
             cd build
             ../configure --target-list=aarch64-softmmu,x86_64-softmmu --enable-sdl --with-sdlabi=2.0 --enable-gtk --with-gtkabi=3.0 \
-            --enable-kvm --enable-spice --enable-usb-redir --enable-libusb --prefix=${INST_ROOT}
+            --enable-kvm --enable-spice --enable-usb-redir --enable-libusb --enable-virtfs --prefix=${INST_ROOT}
             make install
         ;;
         *)

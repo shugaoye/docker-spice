@@ -1,6 +1,12 @@
 #!/bin/sh
 
-SPICE_ROOT=`pwd`
+# If env variable SPICE_ROOT is defined, use it.
+# Otherwise, check from command line or use the current folder.
+if [ -z ${SPICE_ROOT} ]; then 
+	[ -z $1 ] && SPICE_ROOT=`pwd` || SPICE_ROOT=$1
+fi
+
+
 SRC_ROOT=$SPICE_ROOT/src
 INST_ROOT=$SPICE_ROOT/rel
 

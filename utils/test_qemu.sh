@@ -25,8 +25,15 @@
 # script as x86qemu_iso.
 #
 
+#------------------------------------------------------------------------------
 # setup enviornment
-[ -z $1 ] && SPICE_ROOT=`pwd` || SPICE_ROOT=$1
+# $ test_qemu.sh SPICE_ROOT AOSP_OUT
+# You can specify SPICE_ROOT and AOSP_OUT in command line.
+# If env variable SPICE_ROOT is defined, use it.
+# Otherwise, check from command line or use the current folder.
+if [ -z ${SPICE_ROOT} ]; then 
+	[ -z $1 ] && SPICE_ROOT=`pwd` || SPICE_ROOT=$1
+fi
 SRC_ROOT=$SPICE_ROOT/src
 INST_ROOT=$SPICE_ROOT/rel
 
@@ -34,16 +41,18 @@ export PKG_CONFIG_PATH=$INST_ROOT/lib/pkgconfig:$INST_ROOT/share/pkgconfig
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$INST_ROOT/lib
 export PATH=$PATH:$INST_ROOT/bin
 
-if [ -z $AOSP_OUT ]; then
-	AOSP_OUT=/home/aosp/m/out/target/product/x86_64qemu
+if [ -z ${OUT} ]; then
+	[ -z $2 ] && AOSP_OUT=/home/aosp/m/out/target/product/x86_64qemu || AOSP_OUT=$2
 	echo "Default value is AOSP_OUT=$AOSP_OUT"
 else
-	echo "Using AOSP_OUT=$AOSP_OUT"
+	AOSP_OUT=${OUT}
+	echo "Using AOSP_OUT=$OUT"
 fi
 
 IMG_TYPE=.qcow2
 
-
+# Mount AOSP OUTPUT inside guest system using the below command.
+# $ sudo mount -t 9p -o trans=virtio v_aosp /mnt
 # Refer to Android emulator (ranchu) for the parameters
 #	-drive if=none,overlap-check=none,cache=unsafe,index=4,id=sdcard,file=${AOSP_OUT}/sdcard.img${IMG_TYPE},l2-cache-size=1048576 
 #	-device virtio-blk-pci,drive=sdcard,iothread=disk-iothread,modern-pio-notify
@@ -55,8 +64,8 @@ x86qemu () {
 	    -enable-kvm \
 		-m 1024 \
 		-serial stdio \
-		-monitor telnet:127.0.0.1:1234,server,nowait \
-		-netdev user,tftp=/home/aosp/TFTP/,bootfile=tftp://10.0.2.2/pxelinux.0,id=mynet,hostfwd=tcp::5555-:5555 \
+		-monitor telnet:127.0.0.1:3456,server,nowait \
+		-netdev user,tftp=/home/aosp/TFTP/,bootfile=tftp://10.0.2.2/pxelinux.0,id=mynet,hostfwd=tcp::5555-:5555,hostfwd=tcp::10000-:10000 \
 		-device virtio-net-pci,netdev=mynet \
 		-device virtio-mouse-pci -device virtio-keyboard-pci \
 		-d guest_errors \
@@ -71,8 +80,63 @@ x86qemu () {
 		-append 'ip=dhcp console=ttyS0 rw androidboot.selinux=permissive androidboot.hardware=x86_64qemu DEBUG=2 ROOT=/dev/vda RAMDISK=vdd DATA=vdc' \
 		-drive index=4,if=virtio,id=ramdisk,file=${AOSP_OUT}/ramdisk.img,format=raw,readonly \
 		-vga virtio -device virtio-gpu-pci,virgl -display sdl,gl=on \
-		-fsdev local,id=log1,path=/home/aosp/log/,security_model=mapped \
-		-device virtio-9p-pci,fsdev=log1,mount_tag=v_log
+		-fsdev local,id=aosp1,path=${AOSP_OUT},security_model=mapped \
+		-device virtio-9p-pci,fsdev=aosp1,mount_tag=v_aosp
+		# -redir tcp:10000::10000
+}
+
+x86qemu_debug () {
+	echo "Running default ...p0=$0 p1=$1 p2=$2 p3=$3, PATH=$PATH"
+	
+	qemu-system-x86_64 \
+		-m 1024 \
+		-serial stdio \
+		-monitor telnet:127.0.0.1:3456,server,nowait \
+		-netdev user,tftp=/home/aosp/TFTP/,bootfile=tftp://10.0.2.2/pxelinux.0,id=mynet,hostfwd=tcp::5555-:5555,hostfwd=tcp::10000-:10000 \
+		-device virtio-net-pci,netdev=mynet \
+		-device virtio-mouse-pci -device virtio-keyboard-pci \
+		-d guest_errors \
+		-kernel ${AOSP_OUT}/kernel \
+		-initrd ${AOSP_OUT}/initrd.img \
+		-drive if=none,overlap-check=none,cache=unsafe,index=0,id=system,file=${AOSP_OUT}/system.img${IMG_TYPE} \
+		-device virtio-blk-pci,drive=system,modern-pio-notify \
+		-drive if=none,overlap-check=none,cache=unsafe,index=1,id=cache,file=${AOSP_OUT}/cache.img${IMG_TYPE},l2-cache-size=1048576 \
+		-device virtio-blk-pci,drive=cache,modern-pio-notify \
+		-drive if=none,overlap-check=none,cache=unsafe,index=2,id=userdata,file=${AOSP_OUT}/userdata.img${IMG_TYPE},l2-cache-size=1048576 \
+		-device virtio-blk-pci,drive=userdata,modern-pio-notify \
+		-append 'ip=dhcp console=ttyS0 rw androidboot.selinux=permissive androidboot.hardware=x86_64qemu DEBUG=2 ROOT=/dev/vda RAMDISK=vdd DATA=vdc' \
+		-drive index=4,if=virtio,id=ramdisk,file=${AOSP_OUT}/ramdisk.img,format=raw,readonly \
+		-vga virtio -device virtio-gpu-pci,virgl -display sdl,gl=on \
+		-fsdev local,id=log1,path=${AOSP_OUT},security_model=mapped \
+		-device virtio-9p-pci,fsdev=log1,mount_tag=v_aosp -s -S
+		# -redir tcp:10000::10000
+}
+
+x86qemu_pc () {
+	echo "Running default ...p0=$0 p1=$1 p2=$2 p3=$3, PATH=$PATH"
+	
+	qemu-system-x86_64 \
+	    -enable-kvm \
+		-m 1024 \
+		-serial stdio \
+		-monitor telnet:127.0.0.1:1234,server,nowait \
+		-netdev user,tftp=/home/aosp/TFTP/,bootfile=tftp://10.0.2.2/pxelinux.0,id=mynet,hostfwd=tcp::5555-:5555 \
+		-device virtio-net-pci,netdev=mynet \
+		-device virtio-mouse-pci -device virtio-keyboard-pci \
+		-d guest_errors \
+		-kernel ${AOSP_OUT}/boot/vmlinuz-4.10.0-35-generic \
+		-initrd ${AOSP_OUT}/boot/initrd.img-4.10.0-35-generic \
+		-drive if=none,overlap-check=none,cache=unsafe,index=0,id=system,file=${AOSP_OUT}/system.img${IMG_TYPE} \
+		-device virtio-blk-pci,drive=system,modern-pio-notify \
+		-drive if=none,overlap-check=none,cache=unsafe,index=1,id=cache,file=${AOSP_OUT}/cache.img${IMG_TYPE},l2-cache-size=1048576 \
+		-device virtio-blk-pci,drive=cache,modern-pio-notify \
+		-drive if=none,overlap-check=none,cache=unsafe,index=2,id=userdata,file=${AOSP_OUT}/userdata.img${IMG_TYPE},l2-cache-size=1048576 \
+		-device virtio-blk-pci,drive=userdata,modern-pio-notify \
+		-append 'ip=dhcp console=ttyS0 rw androidboot.selinux=permissive androidboot.hardware=x86_64qemu DEBUG=2 ROOT=/dev/vda RAMDISK=vdd DATA=vdc' \
+		-drive index=4,if=virtio,id=ramdisk,file=${AOSP_OUT}/ramdisk.img,format=raw,readonly \
+		-vga virtio -device virtio-gpu-pci,virgl -display sdl,gl=on \
+		-fsdev local,id=log1,path=${AOSP_OUT},security_model=mapped \
+		-device virtio-9p-pci,fsdev=log1,mount_tag=v_aosp
 }
 
 x86qemu_pxe () {
@@ -145,6 +209,12 @@ case $0 in
 	;;
         *pxe)
 		x86qemu_pxe $0 $1 $2 $3
+	;;
+        *pc)
+		x86qemu_pc $0 $1 $2 $3
+	;;
+        *debug)
+		x86qemu_debug $0 $1 $2 $3
 	;;
 	*)
 		x86qemu $0 $1 $2 $3

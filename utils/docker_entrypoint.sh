@@ -25,6 +25,8 @@ echo "$msg - done"
 
 echo ""
 
+chown aosp:aosp /root/bash.bashrc
+
 # Default to 'bash' if no arguments are provided
 args="$@"
 if [ -z "$args" ]; then

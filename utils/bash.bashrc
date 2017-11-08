@@ -113,7 +113,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@qemu_n4:\w\$ '
+export PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@op-tee:\w\$ '
 alias xterm1='xterm -fn 9x15 -bg lightgray -fg black -e /bin/bash -i'
 alias xterm2='xterm -fn 9x15 -rv -e /bin/bash -i'
 alias xterm3='xterm -fn 9x15 -bg white -fg black -e /bin/bash -i'

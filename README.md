@@ -1,4 +1,4 @@
-AOSP/QEMU/SPICE Build Environment in Docker
+AOSP/QEMU/SPICE/OP-TEE Build Environment in Docker
 ====================================================
 
 This build environment is based on Ubuntu 16.04.
@@ -29,3 +29,4 @@ You can define your own user and group using environment varialbles or it will s
 History
 -------
 20170924 - Changed bash.bashrc. Added telnet and mc to image.
+20171108 - Added OP-TEE build support.

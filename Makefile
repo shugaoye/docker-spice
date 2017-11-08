@@ -26,8 +26,8 @@
 # Both can be defined in your environment, otherwise the below default values
 # will be used.
 
-TAG_NAME ?= ubuntu16.04_qemu_n
-VERSION ?= v3
+TAG_NAME ?= op-tee
+VERSION ?= v1
 DOCKER = docker
 IMAGE = shugaoye/docker-spice:$(TAG_NAME)
 VOL1 ?= $(HOME)/vol1
@@ -38,6 +38,9 @@ BUILD_ROOT ?= /home/aosp/qemu_android
 
 all: Dockerfile
 	$(DOCKER) build -t $(IMAGE) .
+
+new: Dockerfile
+	$(DOCKER) build --no-cache -t $(IMAGE) .
 
 run:
 	$(DOCKER) run --privileged --name "$(TAG_NAME)_$(VERSION)" -v /tmp/.X11-unix:/tmp/.X11-unix:ro -v "$(VOL1):/home/aosp" \

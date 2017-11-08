@@ -1,4 +1,4 @@
-# Copyright (C) 2017 AOSP/QEMU/SPICE build environment in docker
+# Copyright (C) 2017 AOSP/QEMU/SPICE/OP-TEE build environment in docker
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
 #
 #******************************************************************************
 #
-# Dockerfile - build environment for AOSP/QEMU/SPICE
-#              This docker image can be used to build Android 7, QEMU and SPICE
+# Dockerfile - build environment for AOSP/QEMU/SPICE/OP-TEE
+#              This docker image can be used to build Android, QEMU, SPICE
+#              and OP-TEE.
 #
 # Copyright (c) 2017 Roger Ye.  All rights reserved.
 #
@@ -26,29 +27,55 @@ FROM shugaoye/docker-aosp:ubuntu16.04-JDK8
 
 MAINTAINER Roger Ye <shugaoye@yahoo.com>
 
-RUN apt-get update
+# This is needed on later Ubuntu distros to be able to install the i386
+# packages.
+RUN dpkg --add-architecture i386
 
-ENV PACKAGES flex bison \
-    libusb-1.0-0-dev libiscsi-dev librados-dev libncurses5-dev \
-    libseccomp-dev libgnutls-dev libssh2-1-dev \
-    libspice-protocol-dev libnss3-dev libfdt-dev \
-    libgtk-3-dev libvte-2.91-dev libsdl1.2-dev libpng12-dev libpixman-1-dev \
-    git make ccache python-yaml gcc clang sparse \
-    openssh-server net-tools gettext vim-common vim-tiny python-pip libxml2-dev \
-    libtext-csv-perl gtk-doc-tools libjpeg-dev valac libssl-dev \
-    libgbm-dev libsdl2-dev libgles2-mesa-dev libepoxy-dev python-mako libglib2.0-dev \
-    xterm libogg-dev telnet mc genisoimage libcap-dev iputils-ping
-RUN apt-get -y install $PACKAGES
+COPY utils/sources.list /etc/apt/sources.list
+
+ENV PACKAGES autoconf ccache clang cscope gcc gdisk genisoimage gettext gtk-doc-tools \
+        mc iputils-ping \
+	    libc6:i386 \
+	    libcap-dev \
+	    libepoxy-dev \
+	    libfdt-dev \
+	    libftdi-dev \
+	    libgbm-dev \
+	    libgles2-mesa-dev \
+	    libglib2.0-dev \
+	    libgnutls-dev \
+	    libgtk-3-dev \
+	    libhidapi-dev \
+	    libiscsi-dev \
+	    libjpeg-dev \
+	    libnss3-dev \
+	    libogg-dev \
+	    libpixman-1-dev \
+	    libpng12-dev \
+	    librados-dev \
+	    libsdl2-dev \
+	    libseccomp-dev \
+	    libssh2-1-dev \
+	    libssl-dev \
+	    libstdc++6:i386 \
+	    libtext-csv-perl \
+	    libtool \
+	    libusb-1.0-0-dev \
+	    libvte-2.91-dev \
+	    libxml2-dev \
+	    libz1:i386 \
+        make mtools net-tools netcat openssh-server \
+        python python-crypto python-mako python-pip python-serial python-wand python-yaml \
+        sparse telnet tmux unzip uuid-dev \
+        valac vim xdg-utils xterm xz-utils
+
+RUN apt-get update && apt-get -y install $PACKAGES && apt-get build-dep -y spice-gtk
 
 ENV FEATURES clang pyyaml
-
-RUN apt-get build-dep -y spice-gtk
-RUN apt-get -y purge libspice-protocol-dev
 
 RUN mkdir /var/run/sshd
 RUN export LC_ALL=C
 
-RUN pip install pyomo -U
 RUN echo 'root:root' | chpasswd
 
 RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config

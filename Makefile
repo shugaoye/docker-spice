@@ -27,11 +27,12 @@
 # will be used.
 
 TAG_NAME ?= op-tee
-VERSION ?= v1
+VERSION ?= v2_atf
 DOCKER = docker
 IMAGE = shugaoye/docker-spice:$(TAG_NAME)
 VOL1 ?= $(HOME)/vol1
 VOL2 ?= $(HOME)/.ccache
+VOL3 ?= /home/android
 USER_ID := $(shell id -u)
 GROUP_ID := $(shell id -g)
 BUILD_ROOT ?= /home/aosp/qemu_android
@@ -44,71 +45,9 @@ new: Dockerfile
 
 run:
 	$(DOCKER) run --privileged --name "$(TAG_NAME)_$(VERSION)" -v /tmp/.X11-unix:/tmp/.X11-unix:ro -v "$(VOL1):/home/aosp" \
+	-v "$(VOL3):/home/android" \
 	-v "$(VOL2):/tmp/ccache" -it -e DISPLAY=$(DISPLAY) -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
 	$(IMAGE) /bin/bash
 
-tag:
-	echo "Tagging $(TAG_NAME)-$(VERSION) ..."
-	git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../spice-protocol; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../spice; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../spice-gtk; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../virt-viewer; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../virglrenderer; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../celt; git tag $(TAG_NAME)-$(VERSION); git push shugaoye $(TAG_NAME)-$(VERSION)
-	cd ../qemu; git tag $(TAG_NAME)-$(VERSION); git push github $(TAG_NAME)-$(VERSION)
-
 .PHONY: all
 
-# The following build targets can only run inside containers.
-spice-protocol:
-	./build_script.sh spice-protocol
-
-spice:
-	./build_script.sh spice
-
-spice-gtk:
-	./build_script.sh spice-gtk
-
-virt-viewer:
-	./build_script.sh virt-viewer
-
-virglrenderer:
-	./build_script.sh virglrenderer
-
-celt:
-	./build_script.sh celt
-	
-qemu:
-	./build_script.sh qemu
-
-# The following build targets can run from the host.
-docker-spice-protocol:
-	$(DOCKER) run --rm --name "$(TAG_NAME)_spice-protocol" -v "$(VOL1):/home/aosp" \
-	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh spice-protocol $(BUILD_ROOT)
-
-docker-spice:
-	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
-	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh spice $(BUILD_ROOT)
-
-docker-spice-gtk:
-	$(DOCKER) run --rm --name "$(TAG_NAME)_spice-gtk" -v "$(VOL1):/home/aosp" \
-	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh spice-gtk $(BUILD_ROOT)
-
-docker-virt-viewer:
-	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
-	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh virt-viewer $(BUILD_ROOT)
-
-docker-virglrenderer:
-	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
-	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh virglrenderer $(BUILD_ROOT)
-
-docker-qemu:
-	$(DOCKER) run --rm --name "$(TAG_NAME)_spice" -v "$(VOL1):/home/aosp" \
-	-v "$(VOL2):/tmp/ccache" -it -e USER_ID=$(USER_ID) -e GROUP_ID=$(GROUP_ID) \
-	$(IMAGE) $(BUILD_ROOT)/src/docker-spice/build_script.sh qemu $(BUILD_ROOT)

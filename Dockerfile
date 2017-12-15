@@ -34,7 +34,7 @@ RUN dpkg --add-architecture i386
 COPY utils/sources.list /etc/apt/sources.list
 
 ENV PACKAGES autoconf ccache clang cscope gcc gdisk genisoimage gettext gtk-doc-tools \
-        mc iputils-ping \
+            iputils-ping iasl \
 	    libc6:i386 \
 	    libcap-dev \
 	    libepoxy-dev \
@@ -64,7 +64,7 @@ ENV PACKAGES autoconf ccache clang cscope gcc gdisk genisoimage gettext gtk-doc-
 	    libvte-2.91-dev \
 	    libxml2-dev \
 	    libz1:i386 \
-        make mtools net-tools netcat openssh-server \
+        make mc mtools net-tools netcat openssh-server \
         python python-crypto python-mako python-pip python-serial python-wand python-yaml \
         sparse telnet tmux unzip uuid-dev \
         valac vim xdg-utils xterm xz-utils

@@ -26,8 +26,8 @@
 # Both can be defined in your environment, otherwise the below default values
 # will be used.
 
-TAG_NAME ?= op-tee
-VERSION ?= v2_atf
+TAG_NAME ?= ubuntu16.04-m_op-tee
+VERSION ?= v1
 DOCKER = docker
 IMAGE = shugaoye/docker-spice:$(TAG_NAME)
 VOL1 ?= $(HOME)/vol1

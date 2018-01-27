@@ -23,7 +23,7 @@
 #******************************************************************************
 #
 
-FROM shugaoye/docker-aosp:ubuntu16.04-JDK8
+FROM shugaoye/docker-aosp:ubuntu16.04-JDK7
 
 MAINTAINER Roger Ye <shugaoye@yahoo.com>
 

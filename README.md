@@ -13,13 +13,13 @@ Docker image for ATF build
 ==========================
 The docker image for the ATF build can be pulled from Docker Hub using the below command:
 
-    $ docker pull shugaoye/docker-spice:op-tee
+    $ docker pull shugaoye/docker-spice:ubuntu16.04-m_op-tee
 
 The image ``shugaoye/docker-spice`` is an image to build AOSP, QEMU and SPICE etc. I created 
-a branch [op-tee](https://github.com/shugaoye/docker-spice/tree/op-tee) for the ATF and op-tee build. To start a container, you can checkout the source code
+a branch [ubuntu16.04-m_op-tee](https://github.com/shugaoye/docker-spice/tree/ubuntu16.04-m_op-tee) for the ATF and op-tee build. To start a container, you can checkout the source code
 and run ``make`` command as below:
 
-    $ git clone https://github.com/shugaoye/docker-spice.git -b op-tee
+    $ git clone https://github.com/shugaoye/docker-spice.git -b ubuntu16.04-m_op-tee
     $ make run
 
 You can refer to the ``Makefile`` to find out the details about how to build the Docker image and

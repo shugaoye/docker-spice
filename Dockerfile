@@ -35,6 +35,7 @@ COPY utils/sources.list /etc/apt/sources.list
 
 ENV PACKAGES autoconf ccache clang cscope gcc gdisk genisoimage gettext gtk-doc-tools \
             iputils-ping iasl \
+	    kmod \
 	    libc6:i386 \
 	    libcap-dev \
 	    libepoxy-dev \
